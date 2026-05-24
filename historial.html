@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Bank - Historial</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body class="body-app">
+    <nav class="navbar navbar-dark mb-4 shadow">
+        <span class="navbar-brand font-weight-bold">Pokémon Bank ATM</span>
+        <span class="user-info" id="nombreUsuarioHistorial">Cliente: Ash Ketchum</span>
+    </nav>
+    <div class="container">
+        <div class="table-container shadow">
+            <h2 class="text-center mb-4" style="color: #3b4cca; font-weight: bold;">Historial de Transacciones</h2>
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr><th>Fecha</th><th>Descripción</th><th>Monto</th><th>Estado</th></tr>
+                </thead>
+                <tbody id="historialTransacciones">
+                </tbody>
+            </table>
+            <div class="mt-4 text-right"><a href="menu.html" class="btn btn-primary px-4" style="background-color: #3b4cca !important; border:none; font-weight:bold;">Volver al Menú</a></div>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/reportes.js"></script>
+    <script src="js/transacciones.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const usuario = obtenerUsuario();
+            if (usuario) {
+                document.getElementById('nombreUsuarioHistorial').innerText = `Cliente: ${usuario.nombre} | N° Cuenta: ${usuario.cuenta}`;
+            }
+
+            cargarHistorialTransacciones(usuario.historial); // Cargar el historial de transacciones
+        }
+            });
+
+        function cargarHistorialTransacciones(historial) {
+            const tbody = document.getElementById('historialTransacciones');
+            tbody.innerHTML = ''; // Limpiar el contenido previo
+
+            historial.forEach(transaccion => {
+                const row = `<tr>
+                        <td>${transaccion.fecha}</td>
+                        <td>${transaccion.tipo}</td>
+                        <td>$${transaccion.monto.toFixed(2)}</td>
+                        <td>${transaccion.estado}</td>
+                    </tr>`;
+                tbody.innerHTML += row; // Agregar cada transacción a la tabla
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Bank - Menú Principal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        /* Ajuste estético para la tarjeta de saldo del cliente */
+        .saldo-box {
+            background-color: white;
+            border: 3px solid #ffcb05;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body class="body-app">
+    <nav class="navbar navbar-dark mb-4 shadow">
+        <span class="navbar-brand font-weight-bold">Pokémon Bank ATM</span>
+        <span class="user-info" id="nombreUsuarioPantalla">Cargando...</span>
+    </nav>
+    
+    <div class="container">
+        <div class="saldo-box text-center shadow-sm">
+            <h5 class="text-muted text-uppercase font-weight-bold mb-1" style="font-size: 0.9rem; letter-spacing: 1px;">Saldo Disponible</h5>
+            <h2 id="saldoUsuarioPantalla" style="color: #3b4cca; font-weight: 900; font-size: 2.2rem; margin: 0;">$0.00</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6"><button onclick="realizarDepositoYActualizar()" class="btn btn-outline-success btn-block btn-action">DEPOSITAR</button></div>
+            <div class="col-md-6"><button onclick="realizarRetiroYActualizar()" class="btn btn-outline-danger btn-block btn-action">RETIRAR</button></div>
+            <div class="col-md-6"><button onclick="consultarSaldo()" class="btn btn-outline-primary btn-block btn-action">CONSULTAR SALDO</button></div>
+            <div class="col-md-6"><button onclick="realizarPagoServicios()" class="btn btn-outline-warning btn-block btn-action">PAGO DE SERVICIOS</button></div>
+            <div class="col-md-12"><a href="historial.html" class="btn btn-info btn-block btn-action" style="background-color: #17a2b8 !important; color: white !important; border:none;">HISTORIAL DE MOVIMIENTOS</a></div>
+            <div class="col-md-12"><a href="grafica.html" class="btn btn-dark btn-block btn-action" style="background-color: #3b4cca !important; color: white !important; border:none;">ANÁLISIS DE CUENTA</a></div>
+        </div>
+        <div class="text-center mt-4"><a href="index.html" class="btn btn-secondary shadow-sm">FINALIZAR SESIÓN</a></div>
+    </div>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script src="js/storage.js"></script>
+    <script src="js/transacciones.js"></script>
+    <script src="js/validaciones.js"></script>
+    <script src="js/interfaz.js"></script>
+
+    <script>
+        // Función empírica para pintar los datos y el saldo en tiempo real en la pantalla principal
+        function actualizarInterfazPantalla() {
+            const usuario = obtenerUsuario();
+            if (usuario) {
+                document.getElementById('nombreUsuarioPantalla').innerText = `Cliente: ${usuario.nombre} | Cuenta: ${usuario.cuenta}`;
+                document.getElementById('saldoUsuarioPantalla').innerText = `$${usuario.saldo.toFixed(2)}`;
+            }
+        }
+
+        // Interceptores para refrescar la pantalla principal inmediatamente después de cada operación
+        function realizarDepositoYActualizar() {
+            realizarDeposito();
+            // Espera un pequeño delay para que el LocalStorage se actualice tras el SweetAlert
+            setTimeout(actualizarInterfazPantalla, 1000);
+        }
+
+        function realizarRetiroYActualizar() {
+            realizarRetiro();
+            setTimeout(actualizarInterfazPantalla, 1000);
+        }
+
+        function realizarPagoServiciosYActualizar() {
+            realizarPagoServicios();
+            setTimeout(actualizarInterfazPantalla, 1000);
+        }
+
+        // Cargar datos oficiales en cuanto se abre la pantalla
+        document.addEventListener('DOMContentLoaded', () => {
+            actualizarInterfazPantalla();
+            
+            // Refrescar el saldo constantemente cuando la ventana reciba foco
+            window.addEventListener('focus', actualizarInterfazPantalla);
+        });
+    </script>
+</body>
+</html>
