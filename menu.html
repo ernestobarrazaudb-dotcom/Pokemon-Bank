@@ -64,7 +64,7 @@
         function realizarDepositoYActualizar() {
             realizarDeposito();
             // Espera un pequeño delay para que el LocalStorage se actualice tras el SweetAlert
-            setTimeout(actualizarInterfazPantalla, 500);
+            actualizarInterfazPantalla();
         }
 
         function realizarRetiroYActualizar() {
